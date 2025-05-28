@@ -11,7 +11,7 @@ const Event = require("../models/eventModel");
 const EventParticipation = require("../models/eventParticipation")
 const PersonalActivity = require("../models/personalActivityModel")
 const Request = require("../models/requestModel")
-const User = require("../models/userModel")
+
 
 
 
@@ -21,7 +21,6 @@ const eventController = createCrudController(Event);
 const eventParticipationController = createCrudController(EventParticipation);
 const personalActivityController = createCrudController(PersonalActivity);
 const requestController = createCrudController(Request);
-const userController = createCrudController(User)
 
 
 router.get("/", (req, res) => {
@@ -64,12 +63,7 @@ router.post("/request", requestController.create);
 router.patch("/request/:id", requestController.update);
 router.delete("/request/:id", requestController.delete);
 
-// User-routes
-router.get("/user", userController.getAll);
-router.get("/user/:id", userController.getOne);
-router.post("/user", userController.create);
-router.patch("/user/:id", userController.update);
-router.delete("/user/:id", userController.delete);
+
 
 
 

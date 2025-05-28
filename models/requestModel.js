@@ -14,9 +14,8 @@ const mongoose = require("mongoose");
 //skapar en ny schema och skickar in ett objekt som beskriver hur datamodellen bör se ut.
 const requestSchema = new mongoose.Schema(
     {
-        fromUserId: { //Vem skickar?
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+        fromUserAuthId: { //Vem skickar?
+            type: String,
             required: true
         },
         to: { //vad eller vem är förfrågan till?
@@ -25,9 +24,8 @@ const requestSchema = new mongoose.Schema(
                 required: true
             },
             id: {// mottagarens id
-                type: mongoose.Schema.Types.ObjectId,
+                type: [mongoose.Schema.Types.ObjectId, String], //string om authID annars eventets id
                 required: true,
-                refPath: "target.type"
             }
         },
         intention: { // Vad är gäller förfrågan?

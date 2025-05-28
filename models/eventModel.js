@@ -28,8 +28,9 @@ const eventSchema = new mongoose.Schema(
             required: true
         },
         location: String,
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId, ref: "User"
+        creatorAuthId: {
+            type: String,
+            required: true
         }
     },
     {

@@ -16,7 +16,6 @@ const eventActivitySchema = new mongoose.Schema(
     {
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Event",
             required: true
         },
         title: {
@@ -29,6 +28,10 @@ const eventActivitySchema = new mongoose.Schema(
             required: true
         },
         endTime: Date,
+        creatorAuthId: {
+            type: String,
+            required: true
+        }
     },
     {
         timestamps: true

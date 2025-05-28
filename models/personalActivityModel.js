@@ -14,15 +14,12 @@ const mongoose = require("mongoose");
 //skapar en ny schema och skickar in ett objekt som beskriver hur datamodellen bör se ut.
 const personalActivitySchema = new mongoose.Schema(
     {
-
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+        userAuthId: {
+            type: String,
             required: true,
         },
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Event",
             required: true
         },
         title: {

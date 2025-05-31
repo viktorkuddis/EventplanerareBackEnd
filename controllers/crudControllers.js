@@ -7,18 +7,13 @@
 //hämtar mongoose funktionalitet
 const mongoose = require("mongoose");
 
-
-const createCrudController = (Model, populateOptions = []) => {
-
-
+const createCrudController = (Model) => {
     return {
 
-
-
-
-        // ===============================
+        // ===============================================================
         // READ ALL – Hämtar alla dokument, med möjlighet till query-filter
-        // ===============================
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
         async getAll(req, res) {
             console.log("hej")
             try {
@@ -30,9 +25,9 @@ const createCrudController = (Model, populateOptions = []) => {
             }
         },
 
-        // ===============================
+        // ===============================================================
         // READ ONE – Hämtar ett dokument baserat på ID
-        // ===============================
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         async getOne(req, res) {
             const { id } = req.params;
             //kollar så idt är en Valid Mongo-id.
@@ -48,9 +43,9 @@ const createCrudController = (Model, populateOptions = []) => {
             }
         },
 
-        // ===============================
+        // ===============================================================
         // CREATE – Skapar ett nytt dokument i databasen
-        // ===============================
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         async create(req, res) {
             try {
                 // id hämtas från auth i requesten.
@@ -76,9 +71,9 @@ const createCrudController = (Model, populateOptions = []) => {
             }
         },
 
-        // ===============================
+        // ===============================================================
         // UPDATE – Uppdaterar ett dokument baserat på ID
-        // ===============================
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         async update(req, res) {
             const { id } = req.params;
 
@@ -106,9 +101,9 @@ const createCrudController = (Model, populateOptions = []) => {
             }
         },
 
-        // ===============================
+        // ===============================================================
         // DELETE – Tar bort ett dokument baserat på ID
-        // ===============================
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         async delete(req, res) {
             const { id } = req.params;
 
@@ -130,4 +125,33 @@ const createCrudController = (Model, populateOptions = []) => {
 
 };
 
-module.exports = createCrudController
+//==============================================================
+// hämtar modeller
+const EventActivity = require("../models/eventActivityModel");
+const Event = require("../models/eventModel");
+const EventParticipation = require("../models/eventParticipationModel")
+const PersonalActivity = require("../models/personalActivityModel")
+const Request = require("../models/requestModel")
+
+//==============================================================
+
+// Skapa controllers baserat på modellerna
+const eventActivityController = createCrudController(EventActivity);
+const eventController = createCrudController(Event);
+const eventParticipationController = createCrudController(EventParticipation);
+const personalActivityController = createCrudController(PersonalActivity);
+const requestController = createCrudController(Request);
+
+// med dehär kontrolerna når jag nu de definerade funktoinerna från createCrudController - som ju talar med databasen- baserat på den aktuella modellen (så den vet vilken kollektion i databasen det är vi pratar med).
+
+//eventController.getAll() (där getAll är enfunktoin i createcrudkontroller) skulle alltså svara med allt från event-kollektionen.
+//==============================================================
+
+
+module.exports = {
+    eventActivityController,
+    eventController,
+    eventParticipationController,
+    personalActivityController,
+    requestController
+};

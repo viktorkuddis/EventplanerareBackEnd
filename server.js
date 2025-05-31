@@ -54,6 +54,8 @@ app.get("/", (req, res) => {
 app.use('/api', requireAuth(), routes)
 
 
+
+
 //ansluter till databas med connectionstring.:
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {

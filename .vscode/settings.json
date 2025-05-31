@@ -1,0 +1,8 @@
+{
+  "workbench.colorCustomizations": {
+    "titleBar.activeForeground": "#ffc400", // Vit text i titelfältet (aktivt fönster)
+    "titleBar.inactiveForeground": "#ffc400" // Exempel på en grå färg för inaktivt fönster
+
+
+  }
+}

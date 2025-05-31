@@ -14,33 +14,35 @@ const mongoose = require("mongoose");
 //skapar en ny schema och skickar in ett objekt som beskriver hur datamodellen bör se ut.
 const requestSchema = new mongoose.Schema(
     {
-        fromUserAuthId: { //Vem skickar?
-            type: String,
-            required: true
-        },
-        to: { //vad eller vem är förfrågan till?
-            type: {// typ av mottagare
-                type: String, enum: ["Event", "User"],
+        from: {
+            userAuthId: { //avsändaren
+                type: String,
                 required: true
             },
-            id: {// mottagarens id
-                type: [mongoose.Schema.Types.ObjectId, String], //string om authID annars eventets id
-                required: true,
-            }
-        },
-        intention: { // Vad är gäller förfrågan?
-            type: String,
-            enum: ["joinEvent", "inviteToEvent",],
-            required: true
-        },
-        relatedId: { // relaterat ID beroende på intention.
-            type: [mongoose.Schema.Types.ObjectId, null],
-            required: true
-        },
-        status: {
-            type: String,
-            enum: ["pending", "accepted", "rejected"],
-            default: "pending"
+            to: { //vad eller vem är förfrågan till?
+                type: {// typ av mottagare
+                    type: String, enum: ["event", "user"],
+                    required: true
+                },
+                id: {// mottagarens id, eventets id eller användarens auth id. mixad typ
+                    type: mongoose.Schema.Types.Mixed,
+                    required: true
+                }
+            },
+            intention: { // Vad är gäller förfrågan?
+                type: String,
+                enum: ["joinEvent", "inviteToEvent",],
+                required: true
+            },
+            relatedId: { // relaterat ID beroende på intention. mixad typ
+                type: mongoose.Schema.Types.Mixed,
+                required: true
+            },
+            status: {
+                type: String,
+                enum: ["pending", "accepted", "rejected"],
+                default: "pending"
+            },
         },
     },
     {

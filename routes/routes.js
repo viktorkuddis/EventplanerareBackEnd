@@ -8,7 +8,7 @@ const createCrudController = require("../controllers/crudControllers");
 // hämtar modeller
 const EventActivity = require("../models/eventActivityModel");
 const Event = require("../models/eventModel");
-const EventParticipation = require("../models/eventParticipation")
+const EventParticipation = require("../models/eventParticipationModel")
 const PersonalActivity = require("../models/personalActivityModel")
 const Request = require("../models/requestModel")
 

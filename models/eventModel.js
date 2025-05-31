@@ -29,7 +29,7 @@ const eventSchema = new mongoose.Schema(
             required: true
         },
         location: String,
-        creatorAuthId: {
+        ownerUserAuthId: {
             type: String,
             required: true
         }

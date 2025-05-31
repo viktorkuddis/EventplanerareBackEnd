@@ -28,10 +28,6 @@ const eventActivitySchema = new mongoose.Schema(
             required: true
         },
         endTime: Date,
-        creatorAuthId: {
-            type: String,
-            required: true
-        }
     },
     {
         timestamps: true

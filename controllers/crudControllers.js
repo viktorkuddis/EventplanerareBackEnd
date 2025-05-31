@@ -11,8 +11,6 @@ const mongoose = require("mongoose");
 const createCrudController = (Model, populateOptions = []) => {
 
 
-
-
     return {
 
 
@@ -55,6 +53,22 @@ const createCrudController = (Model, populateOptions = []) => {
         // ===============================
         async create(req, res) {
             try {
+                // id hämtas från auth i requesten.
+                const userAuthId = req.auth.userId;
+
+                // Kolla om modellen har fältet userAuthId . Om den inte har de så går vi vidare och skiter i de :) 
+                if (Model.schema.path('userAuthId')) {
+                    // Om userAuthId finns i body, kolla att den stämmer med auth
+                    if ('userAuthId' in req.body) {
+                        if (req.body.userAuthId !== userAuthId) {
+                            return res.status(403).json({ error: "Skickat userAuthId matchar inte med ID från auth" });
+                        }
+                    } else {
+                        // Om userAuthId inte skickades med i body - sätt den automatiskt från auth
+                        req.body.userAuthId = userAuthId;
+                    }
+                }
+
                 const doc = await Model.create(req.body); // Skapa nytt dokument med data från body
                 res.status(201).json(doc); // Skicka tillbaka det skapade dokumentet
             } catch (err) {
@@ -74,6 +88,7 @@ const createCrudController = (Model, populateOptions = []) => {
             }
 
             try {
+
                 // Hitta dokumentet via id och uppdatera med utsprid body Data som inte finns i bodyn kommer att förbli oförändrat. 
                 const doc = await Model.findByIdAndUpdate(
                     id,

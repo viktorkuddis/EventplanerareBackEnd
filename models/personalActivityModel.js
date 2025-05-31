@@ -14,7 +14,7 @@ const mongoose = require("mongoose");
 //skapar en ny schema och skickar in ett objekt som beskriver hur datamodellen bör se ut.
 const personalActivitySchema = new mongoose.Schema(
     {
-        userAuthId: {
+        ownerUserAuthId: {
             type: String,
             required: true,
         },

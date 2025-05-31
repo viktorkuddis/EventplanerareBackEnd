@@ -34,7 +34,9 @@ const eventParticipationSchema = new mongoose.Schema(
         timestamps: true
     });
 
-eventParticipationSchema.index({ userId: 1, eventId: 1 }, { unique: true });
+eventParticipationSchema.index({ userAuthId: 1, eventId: 1 }, { unique: true });
+
+
 
 
 //exporterar en modell med givet namn i singular baserat på Schmat.

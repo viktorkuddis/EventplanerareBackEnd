@@ -9,16 +9,8 @@ const {
     requestController
 } = require("../controllers/crudControllers");
 
-const createCrudController = require("../controllers/crudControllers");
 
 
-//==============================================================
-// hämtar modeller
-const EventActivity = require("../models/eventActivityModel");
-const Event = require("../models/eventModel");
-const EventParticipation = require("../models/eventParticipationModel")
-const PersonalActivity = require("../models/personalActivityModel")
-const Request = require("../models/requestModel")
 
 
 
@@ -27,14 +19,31 @@ router.get("/", (req, res) => {
 });
 
 
-router.get("/allEventsUserhasScceptted", () => {
+// Skapar Event
+router.post("/event", eventController.create);
 
-    // här är en fuktoin som inte är färdig som ska använda sig av 
-    eventController.getAll
+// HÄMTAR ALLA EVENT SOM TILLHÖR EN VISS PERSON
+router.get("/event/:userId", (req, res,) => {
+    const auth = req.auth();// clerks säkra auth objekt :) 
+    const authId = auth.userId;
+    // console.log("Auth från token:", authId);
+    const userId = req.params.userId;
 
-    //och sen genomföra lite mer logik innan de e klart för return
+    if (userId == authId) {
+        // Lägg in filtret i req.query
+        req.query.ownerUserAuthId = userId;
+        return eventController.getAll(req, res);
+    } else {
+        return res.status(403).json({ error: "Du är inte denna Användaren och har därför inte behörighet just nu :) " });
+    }
+
+});
 
 
+
+router.post("/endpoint", () => {
+
+    console.log("oj oj de försöktes såå mycke")
 
 });
 

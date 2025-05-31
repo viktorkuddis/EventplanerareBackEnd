@@ -17,7 +17,7 @@ const createCrudController = (Model) => {
         async getAll(req, res) {
             console.log("hej")
             try {
-                const filter = req.query || {}; // Ex: ?eventId=abc123
+                const filter = req.query || {}; // Ex: ?eventId=abc123 eller som objekt: {eventId: abc123}
                 const docs = await Model.find(filter); // Hämtar alla dokument som matchar filter
                 res.status(200).json(docs); // Skicka tillbaka resultaten
             } catch (err) {
@@ -48,21 +48,9 @@ const createCrudController = (Model) => {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         async create(req, res) {
             try {
-                // id hämtas från auth i requesten.
-                const userAuthId = req.auth.userId;
-
-                // Kolla om modellen har fältet userAuthId . Om den inte har de så går vi vidare och skiter i de :) 
-                if (Model.schema.path('userAuthId')) {
-                    // Om userAuthId finns i body, kolla att den stämmer med auth
-                    if ('userAuthId' in req.body) {
-                        if (req.body.userAuthId !== userAuthId) {
-                            return res.status(403).json({ error: "Skickat userAuthId matchar inte med ID från auth" });
-                        }
-                    } else {
-                        // Om userAuthId inte skickades med i body - sätt den automatiskt från auth
-                        req.body.userAuthId = userAuthId;
-                    }
-                }
+                // id hämtas från auth i requesten och döper om den.
+                const { userId: userAuthId } = req.auth();
+                console.log(userAuthId)
 
                 const doc = await Model.create(req.body); // Skapa nytt dokument med data från body
                 res.status(201).json(doc); // Skicka tillbaka det skapade dokumentet

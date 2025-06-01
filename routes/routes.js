@@ -23,21 +23,30 @@ router.get("/", (req, res) => {
 router.post("/event", eventController.create);
 
 // HÄMTAR ALLA EVENT SOM TILLHÖR EN VISS PERSON
-router.get("/event/:userId", (req, res,) => {
+
+
+router.get("/event/:userId", (req, res) => {
     const auth = req.auth();// clerks säkra auth objekt :) 
     const authId = auth.userId;
-    // console.log("Auth från token:", authId);
     const userId = req.params.userId;
 
-    if (userId == authId) {
-        // Lägg in filtret i req.query
-        req.query.ownerUserAuthId = userId;
+    if (userId == authId) { //om användaren är personen den försöker få data om...
+        req.params = { ownerUserAuthId: userId }; // skriver över parameter för att skicka vidare till controller som prata med databasen
         return eventController.getAll(req, res);
     } else {
-        return res.status(403).json({ error: "Du är inte denna Användaren och har därför inte behörighet just nu :) " });
+
+        return res.status(403).json({ error: "Ingen behörighet" });
     }
 
+
 });
+
+
+
+
+
+
+
 
 
 

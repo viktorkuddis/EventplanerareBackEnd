@@ -16,13 +16,14 @@ const createCrudController = (Model) => {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         async getAll(req, res) {
-            console.log("hej")
             try {
-                const filter = req.query || {}; // Ex: ?eventId=abc123 eller som objekt: {eventId: abc123}
-                const docs = await Model.find(filter); // Hämtar alla dokument som matchar filter
-                res.status(200).json(docs); // Skicka tillbaka resultaten
+                const filter = req.params; //tar in parametrarena for att använda som filer.
+                console.log("Filter i getAll (params):", filter);
+
+                const docs = await Model.find(filter);
+                res.status(200).json(docs);
             } catch (err) {
-                res.status(500).json({ error: err.message }); // Felhantering
+                res.status(500).json({ error: err.message });
             }
         },
 

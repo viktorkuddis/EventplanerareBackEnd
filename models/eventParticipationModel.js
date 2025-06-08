@@ -14,7 +14,7 @@ const mongoose = require("mongoose");
 //skapar en ny schema och skickar in ett objekt som beskriver hur datamodellen bör se ut.
 const eventParticipationSchema = new mongoose.Schema(
     {
-        userAuthId: {
+        userId: {
             type: String,
             required: true
         },

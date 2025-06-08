@@ -20,6 +20,7 @@ router.get("/", (req, res) => {
 
 
 // Skapar Event
+// TODO: SÄKERHET: nu skapas eventet okritiskt utan att kolla om användaren är den som denutger sig för att vara
 router.post("/event", eventController.create);
 
 // HÄMTAR ALLA EVENT SOM TILLHÖR EN VISS PERSON
@@ -40,6 +41,14 @@ router.get("/event/:userId", (req, res) => {
 
 
 });
+
+
+// Skapar eventParticipation. dvs ett närvarande-objekt :) 
+// TODO: SÄKERHET: nu skapas eventet okritiskt utan att kolla om användaren är den som denutger sig för att vara
+// TODO: SÄKERHET: gör en koll om man finns i request-slita som en person som fått inbjudan OM man själv joinar.
+// TODO: SÄKERHET: alternativ kör en koll om man själv är den de gäller om man ska redigera.
+// TODO: SÖKERHET: alternativ. Kolla om man äger eventt som man försöker skapa eller redigera objektet.
+router.post("/eventParticipation", eventParticipationController.create);
 
 
 

@@ -10,7 +10,6 @@ const mongoose = require("mongoose");
 const createCrudController = (Model) => {
     return {
 
-
         // ===============================================================
         // READ ALL – Hämtar alla dokument, med möjlighet till query-filter
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -4,6 +4,11 @@ const router = express.Router();
 const { clerkClient } = require('@clerk/express');
 
 
+const getSimplifiedUser = require("../helpers/getSimplifiedUser");
+
+const { getEventDetails } = require("../controllers/eventDetailsController");
+
+
 
 
 const {
@@ -17,40 +22,15 @@ const {
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * *
-// *       ~ ~ ~ User från clerk ~ ~ ~           * 
+// *       ~ ~ ~ Users från clerk ~ ~ ~           * 
 // * * * * * * * * * * * * * * * * * * * * * * * *
-
-
-// helperfunktion som hämtar en användare och returnerar förenklad data
-async function getSimplifiedUser(userId) {
-    try {
-        const user = await clerkClient.users.getUser(userId);
-        return {
-            id: user.id,
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            profileImageUrl: user.profileImageUrl || user._raw.image_url || null,
-            notFound: false,
-        };
-    } catch {
-        return {
-            id: userId,
-            username: "okänd",
-            firstName: "Okänd",
-            lastName: "Användare",
-            profileImageUrl: null,
-            notFound: true,
-        };
-    }
-}
 
 // hämtar datat om användare.
 // tar ids som query parametrar kommaseparerade
 // ecempel så här:
 // http://localhost:4000/api/user/list?userIds=user_123,user_456,user_789
 
-router.get('/user/list', async (req, res) => {
+router.get('/users/list', async (req, res) => {
     const userIdsParam = req.query.userIds;
 
     if (!userIdsParam) {
@@ -71,29 +51,12 @@ router.get('/user/list', async (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * *
-// *           ~ ~ ~ E V E N T ~ ~ ~             * 
+// *       ~ ~ ~ USERS ~ ~ ~                     * 
 // * * * * * * * * * * * * * * * * * * * * * * * *
-
-router.get("/", (req, res) => {
-    res.json({ message: "Du är påväg in i apiet" });
-});
-
-
-// Skapar Event
-// TODO: SÄKERHET: nu skapas eventet okritiskt utan att kolla om användaren är den som denutger sig för att vara
-router.post("/event", eventController.create);
 
 // HÄMTAR ALLA EVENT SOM TILLHÖR EN VISS PERSON
-router.get("/event/:userId", (req, res) => {
+router.get("/users/:userId/events", (req, res) => {
     const auth = req.auth();// clerks säkra auth objekt :) 
     const authId = auth.userId;
     const userId = req.params.userId;
@@ -109,29 +72,36 @@ router.get("/event/:userId", (req, res) => {
 
 });
 
-// Hämta sammanslagen tillhörande data om ett event
-router.get("/event/:userId", (req, res) => {
-    const auth = req.auth();// clerks säkra auth objekt :) 
-    const authId = auth.userId;
-    const userId = req.params.userId;
-
-
-
-    try {
-
-        // const event
-        // const participants
-        // const usersInformation
-
-    } catch (error) {
-
-    }
-
-
-});
 
 // * * * * * * * * * * * * * * * * * * * * * * * *
-// *         ~ ~ ~ Participation ~ ~ ~           * 
+// *           ~ ~ ~ E V E N T S ~ ~ ~           * 
+// * * * * * * * * * * * * * * * * * * * * * * * *
+
+router.get("/", (req, res) => {
+    res.json({ message: "Du är påväg in i apiet" });
+});
+
+
+// Skapar Event
+// TODO: SÄKERHET: nu skapas eventet okritiskt utan att kolla om användaren är den som denutger sig för att vara
+router.post("/events", eventController.create);
+
+
+
+// Hämta sammanslagen tillhörande data om ett event
+router.get("/events/:eventId/details", async (req, res) => {
+    try {
+        await getEventDetails(req, res);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *         ~ ~ ~ Participations ~ ~ ~           * 
 // * * * * * * * * * * * * * * * * * * * * * * * *
 
 // Skapar eventParticipation. dvs ett närvarande-objekt :) 
@@ -139,7 +109,7 @@ router.get("/event/:userId", (req, res) => {
 // TODO: SÄKERHET: gör en koll om man finns i request-slita som en person som fått inbjudan OM man själv joinar.
 // TODO: SÄKERHET: alternativ kör en koll om man själv är den de gäller om man ska redigera.
 // TODO: SÖKERHET: alternativ. Kolla om man äger eventt som man försöker skapa eller redigera objektet.
-router.post("/eventParticipation", eventParticipationController.create);
+router.post("/eventParticipations", eventParticipationController.create);
 
 
 

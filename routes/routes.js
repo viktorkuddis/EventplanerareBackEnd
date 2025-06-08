@@ -20,6 +20,31 @@ const {
 // *       ~ ~ ~ User från clerk ~ ~ ~           * 
 // * * * * * * * * * * * * * * * * * * * * * * * *
 
+
+// helperfunktion som hämtar en användare och returnerar förenklad data
+async function getSimplifiedUser(userId) {
+    try {
+        const user = await clerkClient.users.getUser(userId);
+        return {
+            id: user.id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profileImageUrl: user.profileImageUrl || user._raw.image_url || null,
+            notFound: false,
+        };
+    } catch {
+        return {
+            id: userId,
+            username: "okänd",
+            firstName: "Okänd",
+            lastName: "Användare",
+            profileImageUrl: null,
+            notFound: true,
+        };
+    }
+}
+
 // hämtar datat om användare.
 // tar ids som query parametrar kommaseparerade
 // ecempel så här:
@@ -36,29 +61,8 @@ router.get('/user/list', async (req, res) => {
 
     try {
         // hämtar från clerk:
-        const users = await Promise.all(userIds.map(async (userId) => {
-            try {
-                const user = await clerkClient.users.getUser(userId);
-                return {
-                    id: user.id,
-                    username: user.username,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    profileImageUrl: user.profileImageUrl || user._raw.image_url || null,
-                    notFound: false,
-                };
-            } catch {
-                return {
-                    id: userId,
-                    username: "okänd",
-                    firstName: "Okänd",
-                    lastName: "Användare",
-                    profileImageUrl: null,
-                    notFound: true,
-                };
-            }
-        }));
-
+        const users = await Promise.all(userIds.map(userId => getSimplifiedUser(userId))
+        );
         res.json(users);
 
     } catch (error) {

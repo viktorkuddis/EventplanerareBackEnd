@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
+const { clerkClient } = require('@clerk/express');
+
+
+
+
 const {
     eventActivityController,
     eventController,
@@ -11,8 +16,68 @@ const {
 
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *       ~ ~ ~ User från clerk ~ ~ ~           * 
+// * * * * * * * * * * * * * * * * * * * * * * * *
+
+// hämtar datat om användare.
+// tar ids som query parametrar kommaseparerade
+// ecempel så här:
+// http://localhost:4000/api/user/list?userIds=user_123,user_456,user_789
+
+router.get('/user/list', async (req, res) => {
+    const userIdsParam = req.query.userIds;
+
+    if (!userIdsParam) {
+        return res.status(400).json({ error: 'userIds saknas' });
+    }
+
+    const userIds = userIdsParam.split(','); //skapar array av idna
+
+    try {
+        // hämtar från clerk:
+        const users = await Promise.all(userIds.map(async (userId) => {
+            try {
+                const user = await clerkClient.users.getUser(userId);
+                return {
+                    id: user.id,
+                    username: user.username,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    profileImageUrl: user.profileImageUrl || user._raw.image_url || null,
+                    notFound: false,
+                };
+            } catch {
+                return {
+                    id: userId,
+                    username: "okänd",
+                    firstName: "Okänd",
+                    lastName: "Användare",
+                    profileImageUrl: null,
+                    notFound: true,
+                };
+            }
+        }));
+
+        res.json(users);
+
+    } catch (error) {
+        console.error('Fel vid hämtning av användare:', error);
+        res.status(500).json({ error: 'Något gick fel vid hämtning av användare' });
+    }
+});
 
 
+
+
+
+
+
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *           ~ ~ ~ E V E N T ~ ~ ~             * 
+// * * * * * * * * * * * * * * * * * * * * * * * *
 
 router.get("/", (req, res) => {
     res.json({ message: "Du är påväg in i apiet" });
@@ -24,8 +89,6 @@ router.get("/", (req, res) => {
 router.post("/event", eventController.create);
 
 // HÄMTAR ALLA EVENT SOM TILLHÖR EN VISS PERSON
-
-
 router.get("/event/:userId", (req, res) => {
     const auth = req.auth();// clerks säkra auth objekt :) 
     const authId = auth.userId;
@@ -42,6 +105,30 @@ router.get("/event/:userId", (req, res) => {
 
 });
 
+// Hämta sammanslagen tillhörande data om ett event
+router.get("/event/:userId", (req, res) => {
+    const auth = req.auth();// clerks säkra auth objekt :) 
+    const authId = auth.userId;
+    const userId = req.params.userId;
+
+
+
+    try {
+
+        // const event
+        // const participants
+        // const usersInformation
+
+    } catch (error) {
+
+    }
+
+
+});
+
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *         ~ ~ ~ Participation ~ ~ ~           * 
+// * * * * * * * * * * * * * * * * * * * * * * * *
 
 // Skapar eventParticipation. dvs ett närvarande-objekt :) 
 // TODO: SÄKERHET: nu skapas eventet okritiskt utan att kolla om användaren är den som denutger sig för att vara

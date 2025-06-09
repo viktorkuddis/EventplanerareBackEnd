@@ -8,6 +8,8 @@ const getSimplifiedUser = require("../helpers/getSimplifiedUser");
 
 const { getEventDetails } = require("../controllers/eventDetailsController");
 
+const { getEventByConnectionCode } = require("../controllers/getEventByConnectionCodeController")
+
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
 
@@ -88,6 +90,8 @@ router.get("/", (req, res) => {
 // router.post("/events", eventController.create);
 router.post("/events", createEventWithParticipation);
 
+// Hämtar 1 eventobjekt genom dess connectionkod:
+router.get("/events/bycode/:connectionCode", getEventByConnectionCode);
 
 // Hämta sammanslagen tillhörande data om ett event
 router.get("/events/:eventId/details", async (req, res) => {

@@ -2,6 +2,27 @@ const mongoose = require("mongoose");
 const EventModel = require("../models/eventModel");
 const EventParticipationModel = require("../models/eventParticipationModel");
 
+const { customAlphabet } = require("nanoid"); // importera nanoid
+
+
+// Skapa en generator för 6-siffrig kod och SMÅÅÅÅÅÅÅÅ småååååååå bokstäver OOOOOBS
+const alphaNumNanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 6);
+
+// Funktion för att generera unik connectionCode
+async function generateUniqueConnectionCode() {
+    let code;
+    let exists = true;
+
+    while (exists) {
+        code = alphaNumNanoid();  // använd nya generatorn
+        exists = await EventModel.findOne({ connectionCode: code });
+
+        console.log(`Genererad kod: ${code} — ${exists ? 'finns redan, försöker igen...' : 'unik och godkänd!'}`);
+    }
+
+    return code;
+}
+
 // Controller som skapar både ett event och lägger till skaparen som host-deltagare
 const createEventWithParticipation = async (req, res) => {
     // Starta en MongoDB-transaktion för att säkerställa att båda operationer lyckas eller rullas tillbaka
@@ -12,10 +33,15 @@ const createEventWithParticipation = async (req, res) => {
         // Hämta användar-ID från auth (förutsätter att auth-middleware har lagt in denna metod)
         const { userId: userAuthId } = req.auth();
 
-        // Bygg event-data, inkludera ägar-ID från auth
+        // Generera unik connectionCode innan event-data skapas
+        const code = await generateUniqueConnectionCode();
+
+
+        // Bygg event-data, inkludera ägar-ID från auth och connection code
         const eventData = {
             ...req.body,
             ownerUserAuthId: userAuthId,
+            connectionCode: code,
         };
 
         // Skapa eventet (wrap i array eftersom .create() kräver det för sessioner)

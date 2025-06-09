@@ -32,7 +32,13 @@ const eventSchema = new mongoose.Schema(
         ownerUserAuthId: {
             type: String,
             required: true
-        }
+        }, connectionCode: {
+            type: String,
+            required: true,
+            unique: true,   // <-- här lägger du till unikt index
+            lowercase: true // <-- gör så att det alltid sparas i små bokstäver
+        },
+
     },
     {
         timestamps: true

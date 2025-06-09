@@ -9,6 +9,7 @@ const getSimplifiedUser = require("../helpers/getSimplifiedUser");
 const { getEventDetails } = require("../controllers/eventDetailsController");
 
 
+const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
 
 
 const {
@@ -84,8 +85,8 @@ router.get("/", (req, res) => {
 
 // Skapar Event
 // TODO: SÄKERHET: nu skapas eventet okritiskt utan att kolla om användaren är den som denutger sig för att vara
-router.post("/events", eventController.create);
-
+// router.post("/events", eventController.create);
+router.post("/events", createEventWithParticipation);
 
 
 // Hämta sammanslagen tillhörande data om ett event

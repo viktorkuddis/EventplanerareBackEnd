@@ -16,6 +16,7 @@ async function getEventDetails(req, res) {
 
         // Hämta deltaganden för eventet
         const participations = await EventParticipation.find({ eventId }).lean();
+        console.log("hittade partisipation:", participations)
 
         // Lägg till användarinfo till varje deltagande
         const enrichedParticipations = await Promise.all(participations.map(async (participation) => {

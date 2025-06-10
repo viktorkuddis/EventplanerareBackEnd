@@ -6,9 +6,11 @@ const { clerkClient } = require('@clerk/express');
 
 const getSimplifiedUser = require("../helpers/getSimplifiedUser");
 
-const { getEventDetails } = require("../controllers/eventDetailsController");
+const { getEventDetails } = require("../controllers/eventDetailsControllers");
 
 const { getEventByConnectionCode } = require("../controllers/getEventByConnectionCodeController")
+
+const { createRequest } = require("../controllers/requestControllers");
 
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
@@ -19,7 +21,6 @@ const {
     eventController,
     eventParticipationController,
     personalActivityController,
-    requestController
 } = require("../controllers/crudControllers");
 
 
@@ -119,6 +120,11 @@ router.post("/eventParticipations", eventParticipationController.create);
 
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *         ~ ~ ~ REQUESTS ~ ~ ~                * 
+// * * * * * * * * * * * * * * * * * * * * * * * *
+
+router.post("/requests", createRequest);
 
 
 

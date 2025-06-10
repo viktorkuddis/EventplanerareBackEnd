@@ -18,33 +18,34 @@ const requestSchema = new mongoose.Schema(
             userAuthId: { //avsändaren
                 type: String,
                 required: true
-            },
-            to: { //vad eller vem är förfrågan till?
-                type: {// typ av mottagare
-                    type: String, enum: ["event", "user"],
-                    required: true
-                },
-                id: {// mottagarens id, eventets id eller användarens auth id. mixad typ
-                    type: mongoose.Schema.Types.Mixed,
-                    required: true
-                }
-            },
-            intention: { // Vad är gäller förfrågan?
-                type: String,
-                enum: ["joinEvent", "inviteToEvent",],
+            }
+        },
+        to: { //vad eller vem är förfrågan till?
+            type: {// typ av mottagare
+                type: String, enum: ["event", "user"],
                 required: true
             },
-            relatedId: { // relaterat ID beroende på intention. mixad typ
+            id: {// mottagarens id, eventets id eller användarens auth id. mixad typ
                 type: mongoose.Schema.Types.Mixed,
                 required: true
-            },
-            status: {
-                type: String,
-                enum: ["pending", "accepted", "rejected"],
-                default: "pending"
-            },
+            }
+        },
+        intention: { // Vad är gäller förfrågan?
+            type: String,
+            enum: ["joinEvent", "inviteToEvent",],
+            required: true
+        },
+        relatedId: { // relaterat ID beroende på intention. mixad typ
+            type: mongoose.Schema.Types.Mixed,
+            required: true
+        },
+        status: {
+            type: String,
+            enum: ["pending", "accepted", "rejected"],
+            default: "pending"
         },
     },
+
     {
         timestamps: true,
     });

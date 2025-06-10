@@ -10,7 +10,7 @@ const { getEventDetails } = require("../controllers/eventDetailsControllers");
 
 const { getEventByConnectionCode } = require("../controllers/getEventByConnectionCodeController")
 
-const { createRequest } = require("../controllers/requestControllers");
+const { createRequest } = require("../controllers/requestControlers")
 
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")

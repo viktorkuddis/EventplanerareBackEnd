@@ -42,6 +42,7 @@ async function getNotificationsFeed(req, res) {
 
         // ** GÖR OM REQUESTS TILL NOTIFIKATIONER ** //
         const requestsToNotificationItems = await Promise.all(allRelevantRequests.map(async (r) => {
+
             // om den är en förfrågan om att delta i event:
             if (r.to.type == "event" && r.intention == "joinEvent") {
 
@@ -57,16 +58,15 @@ async function getNotificationsFeed(req, res) {
                 return {
                     textAsHtml: `<strong>@${fromUser?.username}</strong> vill ansluta till ditt event <strong>${event?.title}</strong>`,
                     date: r.updatedAt,
-                    url: ""
+                    url: `/home/notifications/request/${r._id}`
                 }
             } else {
-                return {
-                    textAsHtml: "",
-                    date: r.updatedAt,
-                    url: ""
-                }
+                return
             }
         }));
+
+        // Sortera notifikationerna efter datum, nyast först
+        requestsToNotificationItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         res.status(200).json(requestsToNotificationItems);
 

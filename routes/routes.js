@@ -8,6 +8,8 @@ const getSimplifiedUser = require("../helpers/getSimplifiedUser");
 
 const { getEventDetails } = require("../controllers/eventDetailsControllers");
 
+const { getNotificationsFeed } = require("../controllers/getNotificationsFeedControler")
+
 const { getEventByConnectionCode } = require("../controllers/getEventByConnectionCodeController")
 
 const { createRequest } = require("../controllers/requestControlers")
@@ -70,6 +72,21 @@ router.get("/users/:userId/events", (req, res) => {
         return eventController.getAll(req, res);
     } else {
 
+        return res.status(403).json({ error: "Ingen behörighet" });
+    }
+
+
+});
+
+// HÄMTAR NotificationFeed för en person
+router.get("/users/:userId/notifications", async (req, res) => {
+    const auth = req.auth();// clerks säkra auth objekt :) 
+    const authId = auth.userId;
+    const userId = req.params.userId;
+
+    if (userId == authId) { //om användaren är personen den försöker få data om...
+        await getNotificationsFeed(req, res);
+    } else {
         return res.status(403).json({ error: "Ingen behörighet" });
     }
 

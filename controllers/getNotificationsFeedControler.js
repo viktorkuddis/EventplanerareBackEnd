@@ -75,11 +75,13 @@ async function getNotificationsFeed(req, res) {
                 // hämtar aktuella eventet från tidigare variabel med events från databasen: 
                 const event = ownedEvents.find(e => e._id.toString() === r.to.id.toString());
 
+                // måste hämta det eventet dom de gäller för att göra en url:
+                const foundEvent = await Event.findById(r.relatedId)
 
                 return {
-                    textAsHtml: `Din förfrågan att delta i eventet <strong>${event?.title}</strong> har blivit godkänd! 🙂`,
+                    textAsHtml: `Din förfrågan att delta i eventet <strong>${foundEvent?.title}</strong> har blivit godkänd! 🙂`,
                     date: r.updatedAt,
-                    url: `/event/${event._id}`
+                    url: `/event/${foundEvent}`
                 }
             }
             // returnerar null för de som inte uppfyller if. 

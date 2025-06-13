@@ -89,13 +89,25 @@ async function getNotificationsFeed(req, res) {
         }));
 
         // Ta bort alla null (eller undefined) innan vi skickar svaret
-        const filteredNotifications = requestsToNotificationItems.filter(item => item !== null);
+        const filteredRequestNotifications = requestsToNotificationItems.filter(item => item !== null);
 
+        // todo. Om de finns andra sortes notifications kan vi filtrera dom här i en annan variabel
 
-        // Sortera notifikationerna efter datum, nyast först
-        filteredNotifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Lägg ihop alla filtrerade nitifikationer här i en gemensam lista 
+        let allNotifications = [
+            ...filteredRequestNotifications
+        ];
 
-        res.status(200).json(filteredNotifications);
+        // tar bort dom som inte fyller krav på innehållet
+        allNotifications = allNotifications.filter(notification =>
+            // returnerar bara dom som har värde på dessa keys
+            notification.textAsHtml && notification.url && notification.date
+        );
+
+        // sorterar listan efter tid
+        allNotifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        res.status(200).json(allNotifications);
 
     } catch (error) {
         console.error("Fel i getNotificationsFeed:", error);

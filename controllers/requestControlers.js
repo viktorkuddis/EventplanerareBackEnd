@@ -79,4 +79,38 @@ const getRequest = async (req, res) => {
     }
 }
 
-module.exports = { createRequest, getRequest };
+
+const updateRequest = async (req, res) => {
+    const { requestId } = req.params;
+    const { status } = req.body; // status från frontend
+    const { userId } = req.auth();
+
+
+    try {
+        const updatedRequest = await Request.findByIdAndUpdate(
+            requestId,                // rätt id
+            { status },               // uppdatera bara status
+            { new: true }             // returnera det nya objektet
+        ).lean();                   // gör det till vanligt objekt
+
+        if (!updatedRequest) {
+            return res.status(404).json({ error: "Request hittades inte" });
+        }
+
+        res.status(200).json(updatedRequest);
+    } catch (err) {
+        console.error("Fel vid uppdatering av request:", err.message);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+
+module.exports = { createRequest, getRequest, updateRequest };
+
+
+
+
+
+
+

@@ -67,7 +67,7 @@ async function getNotificationsFeed(req, res) {
                 }
             }
             // om det är en accepterad förfrågan från den aktuella användaren att delta i evenemang:
-            if (r.to.type == "event" && r.intention == "joinEvent" && r.from == userId && r.status == "accepted") {
+            if (r.to.type == "event" && r.intention == "joinEvent" && r.from.userAuthId == userId && r.status == "accepted") {
 
                 // Hämta avsändaren:
                 // const fromUser = await getSimplifiedUser(r.from.userAuthId);

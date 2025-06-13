@@ -12,7 +12,7 @@ const { getNotificationsFeed } = require("../controllers/getNotificationsFeedCon
 
 const { getEventByConnectionCode } = require("../controllers/getEventByConnectionCodeController")
 
-const { createRequest } = require("../controllers/requestControlers")
+const { createRequest, getRequest } = require("../controllers/requestControlers")
 
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
@@ -143,7 +143,7 @@ router.post("/eventParticipations", eventParticipationController.create);
 
 router.post("/requests", createRequest);
 
-
+router.get("/requests/:requestId", getRequest);
 
 
 

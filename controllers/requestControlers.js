@@ -1,4 +1,5 @@
 const Request = require('../models/requestModel');
+const Event = require('../models/eventModel');
 
 
 const createRequest = async (req, res) => {
@@ -37,4 +38,45 @@ const createRequest = async (req, res) => {
 }
 
 
-module.exports = { createRequest };
+const getRequest = async (req, res) => {
+
+    const { requestId } = req.params;
+
+    const { userId } = req.auth();
+    console.log("--- Användarid:", userId)
+
+    try {
+
+        // Hämta requestet
+        const request = await Request.findById(requestId).lean();
+        if (!request) {
+            return res.status(404).json({ error: "Requesten hittades ej hittat" });
+        }
+
+        // om de är en request om att gå med i event får bara ägaren av eventet se requesten.
+        if (request.to.type == "event" && request.intention == "joinEvent") {
+            const event = await Event.findById(request.to.id).lean()
+            console.log(`--- REQUEST OM ATT JOINA FÖLJANDE EVENT ---- `, event)
+
+            if (event.ownerUserAuthId == userId) {
+                res.status(200).json({ request });
+            } else {
+                // Använd 403 Forbidden. användaren saknar behörighet
+                res.status(403).json({ error: "Du har inte behörighet att se denna förfrågan." });
+                console.log(" FÖRBJUDEN! :) Användaren saknar behörighet att de denna request ")
+            }
+
+        }
+
+
+
+
+
+
+    } catch (err) {
+        console.error("error: Npgot fel vid hämtning av reduestobjektet i dattabasen ", err.message)
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = { createRequest, getRequest };

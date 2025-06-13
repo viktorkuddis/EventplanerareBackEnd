@@ -42,33 +42,50 @@ async function getNotificationsFeed(req, res) {
 
         // ** GÖR OM REQUESTS TILL NOTIFIKATIONER ** //
         const requestsToNotificationItems = await Promise.all(allRelevantRequests.map(async (r) => {
-
-            // om den är en förfrågan om att delta i event:
-            if (r.to.type == "event" && r.intention == "joinEvent") {
+            console.log(r)
+            // om den är en förfrågan om att delta i event som är pågående:
+            if (r.to.type == "event" && r.intention == "joinEvent" && r.status == "pending") {
 
                 // Hämta avsändaren:
                 const fromUser = await getSimplifiedUser(r.from.userAuthId);
                 // hämtar eventet från tidigare variabel med events från databasen: 
                 const event = ownedEvents.find(e => e._id.toString() === r.to.id.toString());
-                console.log("👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️👁️")
-                console.log(r)
-                console.log(fromUser)
-                console.log(event)
+
 
                 return {
                     textAsHtml: `<strong>@${fromUser?.username}</strong> vill ansluta till ditt event <strong>${event?.title}</strong>`,
                     date: r.updatedAt,
                     url: `/home/notifications/request/${r._id}`
                 }
-            } else {
-                return
             }
+            // om det är en accepterad förfrågan från den aktuella användaren att delta i evenemang:
+            if (r.to.type == "event" && r.intention == "joinEvent" && r.status == "accepted") {
+
+                // Hämta avsändaren:
+                // const fromUser = await getSimplifiedUser(r.from.userAuthId);
+
+                // hämtar aktuella eventet från tidigare variabel med events från databasen: 
+                const event = ownedEvents.find(e => e._id.toString() === r.to.id.toString());
+
+
+                return {
+                    textAsHtml: `Din förfrågan att delta i eventet <strong>${event?.title}</strong> har blivit godkänd! 🙂`,
+                    date: r.updatedAt,
+                    url: `/event/${event._id}`
+                }
+            }
+            // returnerar null för de som inte uppfyller if. 
+            return null
         }));
 
-        // Sortera notifikationerna efter datum, nyast först
-        requestsToNotificationItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Ta bort alla null (eller undefined) innan vi skickar svaret
+        const filteredNotifications = requestsToNotificationItems.filter(item => item !== null);
 
-        res.status(200).json(requestsToNotificationItems);
+
+        // Sortera notifikationerna efter datum, nyast först
+        filteredNotifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        res.status(200).json(filteredNotifications);
 
     } catch (error) {
         console.error("Fel i getNotificationsFeed:", error);

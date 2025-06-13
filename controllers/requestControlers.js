@@ -59,7 +59,7 @@ const getRequest = async (req, res) => {
             console.log(`--- REQUEST OM ATT JOINA FÖLJANDE EVENT ---- `, event)
 
             if (event.ownerUserAuthId == userId) {
-                res.status(200).json({ request.data });
+                res.status(200).json(request.data);
             } else {
                 // Använd 403 Forbidden. användaren saknar behörighet
                 res.status(403).json({ error: "Du har inte behörighet att se denna förfrågan." });

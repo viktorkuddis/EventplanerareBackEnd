@@ -23,14 +23,22 @@ async function getNotificationsFeed(req, res) {
         // ** HÄMTA ALLA RELEVANTE REQUESTS ** //
         const allRelevantRequests = await Request.find({
             $or: [
+                // alla förfrågningar direkt till edn aktuella användaren.
                 {
                     "to.type": "user",
                     "to.id": userId
                 },
+                // alla obesvarade förfrågningar till event som den aktuella användaren äger
                 {
                     "to.type": "event",
                     "to.id": { $in: ownedEventIds },
-                    status: { $in: ["pending", "accepted"] }
+                    status: "pending"
+                },
+                // alla förfrågningar som den aktuella användaren har skickat och som är godkända. 
+                {
+                    "to.type": "event",
+                    "from.userAuthId": userId,
+                    status: "accepted"
                 }
             ]
         })
@@ -59,7 +67,7 @@ async function getNotificationsFeed(req, res) {
                 }
             }
             // om det är en accepterad förfrågan från den aktuella användaren att delta i evenemang:
-            if (r.to.type == "event" && r.intention == "joinEvent" && r.status == "accepted") {
+            if (r.to.type == "event" && r.intention == "joinEvent" && r.from == userId && r.status == "accepted") {
 
                 // Hämta avsändaren:
                 // const fromUser = await getSimplifiedUser(r.from.userAuthId);

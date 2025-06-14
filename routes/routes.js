@@ -16,6 +16,7 @@ const { getEventByConnectionCode } = require("../controllers/getEventByConnectio
 
 const { createRequest, getRequest, updateRequest } = require("../controllers/requestControlers")
 
+const { createEventActivity, getActivitiesByEventId } = require("../controllers/eventActivityControlers")
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
 
@@ -163,6 +164,16 @@ router.get("/events/:eventId/details", async (req, res) => {
 });
 
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *       ~ ~ ~ Event Activitys ~ ~ ~           * 
+// * * * * * * * * * * * * * * * * * * * * * * * *
+
+// skapar
+router.post("/eventactivity/create", createEventActivity);
+
+// hämtar
+router.get("/eventactivity/:eventId", getActivitiesByEventId);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * *

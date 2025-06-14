@@ -6,6 +6,10 @@ const getSimplifiedUser = require("../helpers/getSimplifiedUser");
 
 async function getEventDetails(req, res) {
     try {
+
+        const auth = req.auth();// clerks säkra auth objekt :) 
+        const authId = auth.userId;
+
         const { eventId } = req.params;
 
         // Hämta eventet
@@ -17,6 +21,21 @@ async function getEventDetails(req, res) {
         // Hämta deltaganden för eventet
         const participations = await EventParticipation.find({ eventId }).lean();
         console.log("hittade partisipation:", participations)
+
+        console.log("authId:", authId);
+        console.log("Alla deltagare userId:", participations.map(p => p.userId));
+        // SÄKERHETSKOLL: 
+        // Kollar så att användaren är en deltagare i detta eventet.
+        const hasAccessToEvent = participations.find((p) => p.userId == authId)
+
+        if (hasAccessToEvent) {
+            console.log("--- 👍 Användaren har access till eventet")
+        } else {
+            console.log("användaren har inte access till det här eventet")
+            return res.status(403).json({ error: "Användaren har inte behörighet att se detta event." });
+
+        }
+
 
         // Lägg till användarinfo till varje deltagande
         const enrichedParticipations = await Promise.all(participations.map(async (participation) => {

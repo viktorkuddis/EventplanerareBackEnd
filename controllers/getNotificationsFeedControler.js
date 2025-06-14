@@ -81,7 +81,7 @@ async function getNotificationsFeed(req, res) {
                 return {
                     textAsHtml: `Din förfrågan att delta i eventet <strong>${foundEvent?.title}</strong> har blivit godkänd! 🙂`,
                     date: r.updatedAt,
-                    url: `/event/${foundEvent}`
+                    url: `/event/${foundEvent._id}`
                 }
             }
             // returnerar null för de som inte uppfyller if. 

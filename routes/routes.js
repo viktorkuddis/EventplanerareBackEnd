@@ -3,6 +3,8 @@ const router = express.Router();
 
 const { clerkClient } = require('@clerk/express');
 
+const EventParticipation = require("../models/eventParticipationModel")
+const Event = require("../models/eventModel");
 
 const getSimplifiedUser = require("../helpers/getSimplifiedUser");
 
@@ -73,6 +75,45 @@ router.get("/users/:userId/events", (req, res) => {
         return eventController.getAll(req, res);
     } else {
 
+        return res.status(403).json({ error: "Ingen behörighet" });
+    }
+
+
+});
+
+// HÄMTAR ALLA EVENT SOM EN VISS PERSON DALTAR I dvs både som gäst och host 
+router.get("/events/:userId/all-participating-events", async (req, res) => {
+    const auth = req.auth();// clerks säkra auth objekt :) 
+    const authId = auth.userId;
+
+    const userId = req.params.userId;
+    console.log("--- användaren från parameter: ", userId)
+    console.log("--- autentificerad användare: ", authId)
+
+
+
+    if (userId == authId) { //om användaren är personen den försöker få data om...
+
+        // hämtar alla partisipations som tillhör användaren 
+        const partisipations = await EventParticipation.find({ userId: authId }).lean();
+        console.log("--- patisipations: ", partisipations)
+
+        //plockar it de eventidn vi sk a hämta:
+        const eventIds = partisipations.map(p => p.eventId);
+        console.log("--- extraherade eventidn: ", eventIds)
+
+
+        // hämtar alla event som användaren deltar i vaserat på listan med eventIDs
+        //hämtar alla event där is är något av de som finns i listan $in
+        const events = await Event.find({ _id: { $in: eventIds } });
+        console.log("--- motsvarande events: ", events)
+
+        // sorterar
+        events.sort((a, b) => a.start - b.start);
+        // skickar tillbaka dom eventen.
+        return res.status(200).json(events)
+
+    } else {
         return res.status(403).json({ error: "Ingen behörighet" });
     }
 

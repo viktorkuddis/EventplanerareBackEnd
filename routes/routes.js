@@ -18,6 +18,8 @@ const { createRequest, getRequest, updateRequest } = require("../controllers/req
 
 const { createEventActivity, getActivitiesByEventId } = require("../controllers/eventActivityControlers")
 
+const { createPersonalActivity } = require("../controllers/personalActivityControlers")
+
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
 
 const { acceptJoinnEventRequestAndCreateParticipationControler } = require("../controllers/acceptJoinnEventRequestAndCreateParticipationControler")
@@ -172,8 +174,14 @@ router.get("/events/:eventId/details", async (req, res) => {
 // skapar
 router.post("/eventactivity/create", createEventActivity);
 
-// hämtar
-router.get("/eventactivity/:eventId", getActivitiesByEventId);
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *       ~ ~ ~ Personal Activitys ~ ~ ~        * 
+// * * * * * * * * * * * * * * * * * * * * * * * *
+
+router.post("/personalactivity/create", createPersonalActivity);
+
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * *

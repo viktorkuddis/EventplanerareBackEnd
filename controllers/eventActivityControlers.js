@@ -1,37 +1,9 @@
-const mongoose = require("mongoose");
-const EventModel = require("../models/eventModel");
+
 const EventParticipationModel = require("../models/eventParticipationModel");
 const EventActivity = require("../models/eventActivityModel");
 
 
 
-const getActivitiesByEventId = async (req, res) => {
-    try {
-        const { userId } = req.auth(); // Auth-metod som hämtar användaren
-
-        const { eventId } = req.params;
-        console.log("--- event id", eventId)
-
-        // Kolla att användaren är med i eventet
-        const isParticipant = await EventParticipationModel.findOne({
-            userId: userId,
-            eventId: eventId,
-        });
-
-        if (!isParticipant) {
-            return res.status(403).json({ error: "Du är inte deltagare i detta event." });
-        }
-
-        console.log("Användaren är deltagade:", isParticipant)
-
-        // Hämta aktiviteter
-        const activities = await EventActivity.find({ eventId });
-
-        res.status(200).json(activities);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
 
 const createEventActivity = async (req, res) => {
 

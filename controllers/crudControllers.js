@@ -17,7 +17,7 @@ const createCrudController = (Model) => {
         async getAll(req, res) {
             try {
                 const filter = req.params; //tar in parametrarena for att använda som filer.
-                console.log("Filter i getAll (params):", filter);
+                // console.log("Filter i getAll (params):", filter);
 
                 const docs = await Model.find(filter);
                 res.status(200).json(docs);

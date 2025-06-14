@@ -34,7 +34,6 @@ const eventParticipationSchema = new mongoose.Schema(
         timestamps: true
     });
 
-eventParticipationSchema.index({ userAuthId: 1, eventId: 1 }, { unique: true });
 
 
 

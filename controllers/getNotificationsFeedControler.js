@@ -8,7 +8,7 @@ const getSimplifiedUser = require("../helpers/getSimplifiedUser");
 async function getNotificationsFeed(req, res) {
     try {
         const { userId } = req.params;
-        console.log("- idt från användaren:", userId);
+        // console.log("- idt från användaren:", userId);
 
         // ** HOW TO: Hämta dokument baserat på komplexa villkor ** //
         //    Använd `$or` när du vill matcha dokument där MINST ETT av de angivna villkoren är sant.
@@ -45,12 +45,12 @@ async function getNotificationsFeed(req, res) {
             .sort({ updatedAt: -1, createdAt: -1 }) // Sortera efter senaste ändring/skapande, nyast först
             .lean();
 
-        console.log(`✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨`);
-        console.log("✨ Alla relevanta förfrågningar (från MongoDB):", allRelevantRequests);
+        // console.log(`✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨`);
+        // console.log("✨ Alla relevanta förfrågningar (från MongoDB):", allRelevantRequests);
 
         // ** GÖR OM REQUESTS TILL NOTIFIKATIONER ** //
         const requestsToNotificationItems = await Promise.all(allRelevantRequests.map(async (r) => {
-            console.log(r)
+            // console.log(r)
             // om den är en förfrågan om att delta i event som är pågående:
             if (r.to.type == "event" && r.intention == "joinEvent" && r.status == "pending") {
 

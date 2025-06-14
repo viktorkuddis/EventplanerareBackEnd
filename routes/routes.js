@@ -14,10 +14,10 @@ const { getEventByConnectionCode } = require("../controllers/getEventByConnectio
 
 const { createRequest, getRequest, updateRequest } = require("../controllers/requestControlers")
 
-const { createEventParticipation } = require("../controllers/EventParticipationControlers")
-
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
+
+const { acceptJoinnEventRequestAndCreateParticipationControler } = require("../controllers/acceptJoinnEventRequestAndCreateParticipationControler")
 
 
 const {
@@ -130,7 +130,6 @@ router.get("/events/:eventId/details", async (req, res) => {
 
 // Skapar eventParticipation. dvs ett närvarande-objekt :) 
 
-router.post("/eventParticipations", createEventParticipation);
 
 
 
@@ -143,8 +142,10 @@ router.post("/eventParticipations", createEventParticipation);
 router.post("/requests", createRequest);
 
 router.get("/requests/:requestId", getRequest);
+// ändrar en r
 router.patch("/requests/:requestId", updateRequest);
-
+// accepterar eventförfrågan och skapar deltagande:
+router.patch("/requests/accept/:requestId", acceptJoinnEventRequestAndCreateParticipationControler);
 
 
 

@@ -43,7 +43,7 @@ const getRequest = async (req, res) => {
     const { requestId } = req.params;
 
     const { userId } = req.auth();
-    console.log("--- Användarid:", userId)
+    // console.log("--- Användarid:", userId)
 
     try {
 
@@ -56,7 +56,7 @@ const getRequest = async (req, res) => {
         // om de är en request om att gå med i event får bara ägaren av eventet se requesten.
         if (request.to.type == "event" && request.intention == "joinEvent") {
             const event = await Event.findById(request.to.id).lean()
-            console.log(`--- REQUEST OM ATT JOINA FÖLJANDE EVENT ---- `, event)
+            // console.log(`--- REQUEST OM ATT JOINA FÖLJANDE EVENT ---- `, event)
 
             if (event.ownerUserAuthId == userId) {
                 res.status(200).json(request);

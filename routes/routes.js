@@ -16,7 +16,7 @@ const { getEventByConnectionCode } = require("../controllers/getEventByConnectio
 
 const { createRequest, getRequest, updateRequest } = require("../controllers/requestControlers")
 
-const { createEventActivity, getActivitiesByEventId } = require("../controllers/eventActivityControlers")
+const { createEventActivity } = require("../controllers/eventActivityControlers")
 
 const { createPersonalActivity } = require("../controllers/personalActivityControlers")
 
@@ -180,6 +180,7 @@ router.post("/eventactivity/create", createEventActivity);
 // *       ~ ~ ~ Personal Activitys ~ ~ ~        * 
 // * * * * * * * * * * * * * * * * * * * * * * * *
 
+// skapar
 router.post("/personalactivity/create", createPersonalActivity);
 
 

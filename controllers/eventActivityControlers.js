@@ -51,6 +51,5 @@ const createEventActivity = async (req, res) => {
 };
 
 module.exports = {
-    createEventActivity,
-    getActivitiesByEventId
+    createEventActivity
 };

@@ -45,5 +45,5 @@ const createPersonalActivity = async (req, res) => {
 
 module.exports = {
     createPersonalActivity,
-    getPersonalActivitiesByEventId
+
 };

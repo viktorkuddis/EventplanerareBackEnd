@@ -43,7 +43,32 @@ const createPersonalActivity = async (req, res) => {
 };
 
 
+const updatePersonalActivity = async (req, res) => {
+    try {
+        const { userId } = req.auth();
+        const { id } = req.params;
+        const updateData = req.body;
+
+        // Hitta och uppdatera personal activity OM den ägs av rätt userId
+        const updatedPersonalActivity = await PersonalActivity.findOneAndUpdate(
+            { _id: id, ownerUserAuthId: userId },  // filter
+            updateData,                            // vad som ska uppdateras
+            { new: true }                         // returnera den uppdaterade dokumentet
+        );
+
+        if (!updatedPersonalActivity) {
+            return res.status(404).json({ error: "Personal activity hittades inte eller du har inte behörighet." });
+        }
+
+        res.json(updatedPersonalActivity);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+
 module.exports = {
     createPersonalActivity,
+    updatePersonalActivity
 
 };

@@ -18,7 +18,7 @@ const { createRequest, getRequest, updateRequest } = require("../controllers/req
 
 const { createEventActivity } = require("../controllers/eventActivityControlers")
 
-const { createPersonalActivity } = require("../controllers/personalActivityControlers")
+const { createPersonalActivity, updatePersonalActivity } = require("../controllers/personalActivityControlers")
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
 
@@ -182,6 +182,9 @@ router.post("/eventactivity/create", createEventActivity);
 
 // skapar
 router.post("/personalactivity/create", createPersonalActivity);
+// uppdaterar med hel resurs:
+router.put("/personalactivity/:id", updatePersonalActivity);
+
 
 
 

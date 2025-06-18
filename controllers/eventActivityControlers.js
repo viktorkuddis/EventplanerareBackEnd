@@ -50,6 +50,61 @@ const createEventActivity = async (req, res) => {
     }
 };
 
+
+// Uppdatera event-aktivitet (endast host kan uppdatera)
+const updateEventActivity = async (req, res) => {
+    try {
+        const { userId } = req.auth();
+        const { _id } = req.params;
+        const updateData = req.body;
+
+        // Hitta eventId för aktiviteten för att kolla host-rollen
+        const existingActivity = await EventActivity.findById(_id);
+        if (!existingActivity) {
+            return res.status(404).json({ error: "Event-aktivitet hittades inte." });
+        }
+
+        const isHost = await EventParticipationModel.findOne({ userId, eventId: existingActivity.eventId, role: "host" });
+        if (!isHost) {
+            return res.status(403).json({ error: "Du är inte host och har därför inte behörighet att göra detta." });
+        }
+
+        const updatedActivity = await EventActivity.findByIdAndUpdate(id, updateData, { new: true });
+        res.json(updatedActivity);
+
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+// Ta bort event-aktivitet (endast host kan ta bort)
+const deleteEventActivity = async (req, res) => {
+    try {
+        const { userId } = req.auth();
+        const { _id } = req.params;
+
+
+        const existingActivity = await EventActivity.findById(_id);
+        if (!existingActivity) {
+            return res.status(404).json({ error: "Event-aktivitet hittades inte." });
+        }
+        console.log("vi kom hit")
+        const isHost = await EventParticipationModel.findOne({ userId, eventId: existingActivity.eventId, role: "host" });
+        if (!isHost) {
+            return res.status(403).json({ error: "Du är inte host och har därför inte behörighet att göra detta." });
+        }
+
+        await EventActivity.findByIdAndDelete(id);
+        res.json({ message: "Event-aktivitet raderad." });
+
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+
 module.exports = {
-    createEventActivity
+    createEventActivity,
+    updateEventActivity,
+    deleteEventActivity
 };

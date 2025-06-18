@@ -67,8 +67,28 @@ const updatePersonalActivity = async (req, res) => {
 };
 
 
+const deletePersonalActivity = async (req, res) => {
+    try {
+        const { userId } = req.auth();
+        const { id } = req.params;
+
+        // Ta bort personal activity om den finns och ägs av rätt användare
+        const deleted = await PersonalActivity.findOneAndDelete({ _id: id, ownerUserAuthId: userId });
+
+        if (!deleted) {
+            return res.status(404).json({ error: "Personal activity hittades inte eller du har inte behörighet." });
+        }
+
+        res.json({ message: "Personal activity raderad." });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+
 module.exports = {
     createPersonalActivity,
-    updatePersonalActivity
+    updatePersonalActivity,
+    deletePersonalActivity
 
 };

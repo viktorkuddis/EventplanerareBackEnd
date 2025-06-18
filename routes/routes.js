@@ -16,9 +16,9 @@ const { getEventByConnectionCode } = require("../controllers/getEventByConnectio
 
 const { createRequest, getRequest, updateRequest } = require("../controllers/requestControlers")
 
-const { createEventActivity } = require("../controllers/eventActivityControlers")
+const { createEventActivity, updateEventActivity, deleteEventActivity } = require("../controllers/eventActivityControlers")
 
-const { createPersonalActivity, updatePersonalActivity } = require("../controllers/personalActivityControlers")
+const { createPersonalActivity, updatePersonalActivity, deletePersonalActivity } = require("../controllers/personalActivityControlers")
 
 const { createEventWithParticipation } = require("../controllers/createEventWithParticipationControler")
 
@@ -173,6 +173,10 @@ router.get("/events/:eventId/details", async (req, res) => {
 
 // skapar
 router.post("/eventactivity/create", createEventActivity);
+// ändrar
+router.put("/eventactivity/:id", updateEventActivity);
+//tar bort
+router.delete("/eventactivity/:id", deleteEventActivity);
 
 
 
@@ -184,6 +188,9 @@ router.post("/eventactivity/create", createEventActivity);
 router.post("/personalactivity/create", createPersonalActivity);
 // uppdaterar med hel resurs:
 router.put("/personalactivity/:id", updatePersonalActivity);
+// tar bort
+router.delete("/personalactivity/:id", deletePersonalActivity);
+
 
 
 

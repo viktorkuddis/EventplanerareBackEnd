@@ -53,13 +53,16 @@ const createEventActivity = async (req, res) => {
 
 // Uppdatera event-aktivitet (endast host kan uppdatera)
 const updateEventActivity = async (req, res) => {
+    console.log("✅ vi är här")
     try {
         const { userId } = req.auth();
-        const { _id } = req.params;
+        const { id } = req.params;
         const updateData = req.body;
+        console.log("✅ vi är här")
 
         // Hitta eventId för aktiviteten för att kolla host-rollen
-        const existingActivity = await EventActivity.findById(_id);
+        const existingActivity = await EventActivity.findById(id);
+        console.log("existingActivity", existingActivity)
         if (!existingActivity) {
             return res.status(404).json({ error: "Event-aktivitet hittades inte." });
         }
@@ -70,6 +73,8 @@ const updateEventActivity = async (req, res) => {
         }
 
         const updatedActivity = await EventActivity.findByIdAndUpdate(id, updateData, { new: true });
+        console.log("updatedActivity", updatedActivity)
+
         res.json(updatedActivity);
 
     } catch (err) {

@@ -57,13 +57,29 @@ app.use('/api', requireAuth(), routes)
 
 
 //ansluter till databas med connectionstring.:
+//mongoose.connect(process.env.MONGO_URI)
+  //  .then(() => {
+        //appen lyssnar efter förfrågningar på given port om vi har nått databasen.
+  //      app.listen(process.env.PORT, () => {
+ //           console.log(process.env.PORT + " lyssnas på!!");
+ //      });
+ //   })
+//    .catch((error) => {
+ //       console.log(error);
+//    }); 
+
+
+// ai? 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
-        //appen lyssnar efter förfrågningar på given port om vi har nått databasen.
-        app.listen(process.env.PORT, () => {
-            console.log(process.env.PORT + " lyssnas på!!");
-        });
+        console.log("MongoDB ansluten!");
+        // Endast lyssna lokalt
+        if (process.env.NODE_ENV !== 'production') {
+            app.listen(process.env.PORT || 3000, () => {
+                console.log((process.env.PORT || 3000) + " lyssnar lokalt!!");
+            });
+        }
     })
     .catch((error) => {
         console.log(error);
-    }); 
+    });

@@ -22,8 +22,23 @@ const routes = require("./routes/routes");
 
 // MIDDLEWAREEE // MIDDLEWAREEE // MIDDLEWAREEE
 //=============================================
-app.use(cors()); // Tillåter alla domäner att göra API-anrop
+
+//Lokal utveckling
+//app.use(cors()); // Tillåter alla domäner att göra API-anrop
+
+//deployad utvecklign
+app.use(cors({
+  origin: 'https://vadsker.netlify.app', // din frontend
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'] // viktigt för Clerk-token
+}));
+
+// Preflight för OPTIONS-förfrågningar
+app.options('*', cors());
+
+
 // Middleware: Parsar JSON-data från begäran (req-objektet)
+
 app.use(express.json());
 // Middleware: Loggar metod och sökväg för varje begäran
 app.use((req, res, next) => {

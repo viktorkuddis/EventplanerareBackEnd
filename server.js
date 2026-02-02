@@ -73,12 +73,6 @@ app.use('/api', requireAuth(), routes)
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("MongoDB ansluten!");
-        // Endast lyssna lokalt
-        if (process.env.NODE_ENV !== 'production') {
-            app.listen(process.env.PORT || 3000, () => {
-                console.log((process.env.PORT || 3000) + " lyssnar lokalt!!");
-            });
-        }
     })
     .catch((error) => {
         console.log(error);
